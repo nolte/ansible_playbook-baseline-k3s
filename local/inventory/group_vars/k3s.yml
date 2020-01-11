@@ -1,0 +1,4 @@
+k3s_cluster_domain: sslip.io
+cluster_fqdn: "{{ ansible_eth1.ipv4.address | replace('.', '-')  }}.{{ k3s_cluster_domain }}"
+KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+ansible_ssh_user: "vagrant"

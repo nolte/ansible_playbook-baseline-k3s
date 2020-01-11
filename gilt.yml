@@ -1,0 +1,4 @@
+---
+- git: https://github.com/nolte/ansible_playbook-baseline-online-server.git
+  version: feature/centos8
+  dst: bin/ansible_playbook-baseline-online-server/

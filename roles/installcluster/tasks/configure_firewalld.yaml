@@ -1,0 +1,53 @@
+- name: do facts module to get latest information
+  setup:
+
+# https://rancher.com/docs/rke/latest/en/os/#opening-port-tcp-6443-using-firewalld
+- firewalld:
+    port: "{{ item }}"
+    state: enabled
+    zone: public
+    permanent: yes
+  notify: reloaded firewalld
+  with_items:
+    - "6443/tcp"
+    - "2379-2380/tcp"
+    - "10250/tcp"
+    - "10251/tcp"
+    - "10252/tcp"
+    - "10255/tcp"
+    - "8472/tcp"
+  register: firewall_change_state
+
+- firewalld:
+    state: enabled
+    masquerade: true
+    permanent: yes
+
+- name: Refresh handlers for reload the firewall configuration
+  meta: flush_handlers
+
+- pause:
+    seconds: 20
+  when: firewall_change_state.changed
+
+- name: do facts module to get latest information
+  setup:
+  until: ansible_cni0.ipv4.address is defined
+  retries: 30
+  delay: 10
+
+- set_fact:
+    ip: "{{ ansible_cni0.ipv4.address }}/32"
+
+- firewalld:
+    state: enabled
+    zone: public
+    permanent: yes
+    rich_rule: rule family="ipv4" source address="{{ ip }}" port protocol="tcp" port="6443" accept
+  notify: restart firewalld
+
+- firewalld:
+    service: https
+    permanent: yes
+    state: enabled
+  notify: restart firewalld

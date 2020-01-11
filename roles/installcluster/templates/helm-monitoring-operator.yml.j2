@@ -1,0 +1,63 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: prometheus-operator
+  namespace: operators
+spec:
+  chart: prometheus-operator
+  repo: https://kubernetes-charts.storage.googleapis.com
+  targetNamespace: operators
+  valuesContent: |-
+    # original https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yaml
+    commonLabels:
+      prometheus: k3s-monitoring
+    prometheus:
+      enabled: false
+    alertmanager:
+      enabled: false
+    grafana:
+      enabled: false
+    prometheusOperator:
+      enabled: true
+      createCustomResource: true
+      cleanupCustomResource: true
+    nodeExporter:
+      enabled: false
+    kubeStateMetrics:
+      enabled: false
+    kubeApiServer:
+      enabled: false
+    kubelet:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    coreDns:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+
+    defaultRules:
+      create: true
+      rules:
+        alertmanager: false
+        etcd: false
+        general: false
+        k8s: false
+        kubeApiserver: false
+        kubePrometheusNodeAlerting: false
+        kubePrometheusNodeRecording: false
+        kubernetesAbsent: false
+        kubernetesApps: false
+        kubernetesResources: false
+        kubernetesStorage: false
+        kubernetesSystem: false
+        kubeScheduler: false
+        network: false
+        node: false
+        prometheus: false
+        prometheusOperator: true
+        time: false

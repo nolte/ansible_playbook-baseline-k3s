@@ -1,0 +1,40 @@
+{
+    "variables": {
+        "output_path": "../bin/.output-vagrant-base"
+    },
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "dnf install git jq python3 python3-pip",
+                "pip3 install --upgrade ansible==2.9.2 python-gilt==1.2.1 jmespath==0.9.4"
+            ]
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "../bin/ansible_playbook-baseline-online-server/master-configure-system.yml",
+            "inventory_file": "./inventory/hosts.yml",
+            "inventory_groups": "k3s",
+            "galaxy_file": "../bin/ansible_playbook-baseline-online-server/requirements.yml"
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "../playbook-install-k3s.yaml",
+            "galaxy_file": "../roles/requirements.yml",
+            "inventory_file": "./inventory/hosts.yml",
+            "inventory_groups": "k3s"
+        }
+    ],
+    "builders": [
+        {
+            "communicator": "ssh",
+            "source_path": "bento/centos-8",
+            "provider": "virtualbox",
+            "add_force": true,
+            "box_name": "k3snode",
+            "type": "vagrant",
+            "output_dir": "{{user `output_path`}}/vagrant"
+        }
+    ],
+    "post-processors": []
+}

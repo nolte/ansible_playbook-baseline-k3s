@@ -1,0 +1,36 @@
+Vagrant.configure("2") do |config|
+  config.vm.network "private_network", type: "dhcp"
+
+  config.vm.box =  "bento/centos-8"
+  config.ssh.insert_key = true
+  config.vm.synced_folder "./", "/vagrant", disabled: true
+  config.vm.synced_folder "./../.", "/vagrant", disabled: false
+
+  config.vm.define "k3snode" do |machine|
+    machine.vm.network "private_network", ip: "172.17.177.11"
+    machine.vm.hostname = "k3snode"
+    machine.vm.provider "virtualbox" do |v|
+      v.memory = 16384
+      v.cpus = 4
+    end
+
+    machine.vm.provision "shell", inline: "sudo yum -y install git jq python3 python3-pip"
+    machine.vm.provision "shell", inline: "sudo pip3 install --upgrade ansible==2.9.2 python-gilt==1.2.1 jmespath==0.9.4"
+    #machine.vm.provision "shell", inline: "echo \"export ANSIBLE_HOST_KEY_CHECKING=False\" >> ~/.profile"
+
+
+
+    # install kubectl management tools on the Controller Machine
+    machine.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "/vagrant/master_playbook-full-install.yml"
+      ansible.verbose        = false
+      ansible.install        = true
+      ansible.limit          = "k3s" # or only "nodes" group, etc.
+      ansible.inventory_path = "/vagrant/local/inventory"
+      ansible.install_mode = "pip3"
+      ansible.version = "2.9.2"
+      ansible.galaxy_role_file = "/vagrant/roles/requirements.yml"
+      ansible.galaxy_roles_path = "/home/vagrant/roles"
+    end
+  end
+end

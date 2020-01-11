@@ -1,0 +1,33 @@
+---
+#- become: true
+#  dnf:
+#    name: python3
+
+- become: true
+  pip:
+    #executable: /usr/local/bin/pip3
+    name:
+      - openshift
+      - kubernetes
+      - kubernetes-validate
+      - jmespath
+
+- name: Ensure SELinux is set to enforcing mode
+  become: true
+  lineinfile:
+    path: /etc/environment
+    regexp: '^KUBECONFIG='
+    line: KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
+- name: Ensure SELinux is set to enforcing mode
+  lineinfile:
+    path: "/home/{{ ansible_ssh_user }}/.bashrc"
+    regexp: '^KUBECONFIG='
+    line: KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+  become_user: "{{ ansible_ssh_user }}"
+
+- include_role:
+    name: xanmanning.k3s
+
+# https://rancher.com/docs/k3s/latest/en/installation/install-options/
+- include_tasks: configure_firewalld.yaml

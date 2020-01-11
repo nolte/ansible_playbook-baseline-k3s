@@ -1,0 +1,6 @@
+---
+# Handle the ECS Instances
+- import_playbook: ./bin/ansible_playbook-baseline-online-server/master-configure-system.yml
+
+
+- import_playbook: ./playbook-install-k3s.yaml

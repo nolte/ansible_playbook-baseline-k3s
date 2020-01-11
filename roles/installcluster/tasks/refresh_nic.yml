@@ -1,0 +1,4 @@
+- name: do facts module to get latest information
+  setup:
+- set_fact:
+    ip: "{{ ansible_cni0.ipv4.address }}/32"
