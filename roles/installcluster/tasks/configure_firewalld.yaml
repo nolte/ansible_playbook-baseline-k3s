@@ -5,7 +5,7 @@
 - firewalld:
     port: "{{ item }}"
     state: enabled
-    zone: public
+    zone: trusted
     permanent: yes
   notify: reloaded firewalld
   with_items:
@@ -21,6 +21,7 @@
 - firewalld:
     state: enabled
     masquerade: true
+    zone: trusted
     permanent: yes
 
 - name: Refresh handlers for reload the firewall configuration
@@ -41,7 +42,7 @@
 
 - firewalld:
     state: enabled
-    zone: public
+    zone: trusted
     permanent: yes
     rich_rule: rule family="ipv4" source address="{{ ip }}" port protocol="tcp" port="6443" accept
   notify: restart firewalld
