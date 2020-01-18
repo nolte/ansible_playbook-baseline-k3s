@@ -21,7 +21,6 @@
 - firewalld:
     state: enabled
     masquerade: true
-    zone: trusted
     permanent: yes
 
 - name: Refresh handlers for reload the firewall configuration
