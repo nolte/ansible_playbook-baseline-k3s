@@ -1,0 +1,14 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: stash
+  namespace: operators
+spec:
+  chart: stash
+  repo: https://charts.appscode.com/stable/
+  version: v0.9.0-rc.2
+  targetNamespace: operators
+  valuesContent: |-
+    # Original https://github.com/stashed/installer/blob/master/charts/stash/values.yaml
+    enableAnalytics: false

@@ -5,11 +5,20 @@
 - firewalld:
     port: "{{ item }}"
     state: enabled
-    zone: trusted
+    zone: public
     permanent: yes
   notify: reloaded firewalld
   with_items:
     - "6443/tcp"
+    - "443/tcp"
+
+- firewalld:
+    port: "{{ item }}"
+    state: enabled
+    zone: trusted
+    permanent: yes
+  notify: reloaded firewalld
+  with_items:
     - "2379-2380/tcp"
     - "10250/tcp"
     - "10251/tcp"

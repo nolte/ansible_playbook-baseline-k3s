@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minio
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: minio
+  namespace: operators
+spec:
+  chart: minio
+  repo: https://kubernetes-charts.storage.googleapis.com
+  targetNamespace: minio
+  valuesContent: |-
+    # Original https://github.com/helm/charts/blob/master/stable/minio/values.yaml
+    replicas: 1
+    ingress:
+      enabled: false
+    buckets:
+      - name: backup-mirror
+        policy: none
+        purge: false
+      - name: backup
+        policy: none
+        purge: false
+      - name: tf-state-files
+        policy: none
+        purge: false
+    metrics:
+      # Metrics can not be disabled yet: https://github.com/minio/minio/issues/7493
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          prometheus: k3s-monitoring
+
+    environment:
+      MINIO_PROMETHEUS_AUTH_TYPE: "public"
