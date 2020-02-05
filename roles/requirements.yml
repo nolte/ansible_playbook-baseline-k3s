@@ -1,7 +1,5 @@
 ---
 - name: xanmanning.k3s
-  src: https://github.com/nolte/ansible-role-k3s.git
-  version: feature/add_manifests
 ## HACK!!! (deps from base)
 - name: arillso.logrotate
 - name: geerlingguy.docker
