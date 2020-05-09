@@ -1,0 +1,4 @@
+- name: stop service firewalld if running
+  systemd:
+    name: firewalld
+    state: stopped

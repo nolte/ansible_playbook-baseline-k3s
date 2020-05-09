@@ -30,4 +30,8 @@
     name: xanmanning.k3s
 
 # https://rancher.com/docs/k3s/latest/en/installation/install-options/
-- include_tasks: configure_firewalld.yaml
+- include_tasks: firewalld_enabled.yaml
+  when: firewalld_enabled
+
+- include_tasks: firewalld_disable.yaml
+  when: not firewalld_enabled
