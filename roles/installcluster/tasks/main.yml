@@ -11,7 +11,8 @@
   with_items:
     - container-selinux
     - selinux-policy-base
-
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+  
 - name: Set SELinux to disabled state
   become: true
   selinux:
