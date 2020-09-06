@@ -80,4 +80,4 @@
   when: firewalld_enabled
 
 - include_tasks: firewalld_disable.yaml
-  when: not firewalld_enabled
+  when: not firewalld_enabled and firewalld_exists
