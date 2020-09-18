@@ -6,3 +6,7 @@
     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
   tasks:
     - command: kubectl get nodes
+    - debug:
+        msg: "{{ item }}"
+      with_items:
+        - "{{ groups['k3s'] }}"
