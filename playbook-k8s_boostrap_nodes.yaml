@@ -10,3 +10,7 @@
         msg: "{{ item }}"
       with_items:
         - "{{ groups['k3s'] }}"
+    - debug:
+        msg: "{{ hostvars[item].k3s_node_roles }}"
+      with_inventory_hostnames:
+        - k3s
