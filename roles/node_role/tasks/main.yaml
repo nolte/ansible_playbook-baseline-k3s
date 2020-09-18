@@ -1,4 +1,5 @@
 ---
 
+- debug: msg="Set Roles for node {{ node }}"
 - command: kubectl label node {{ node }} node-role.kubernetes.io/{{ item }}={{ item }} --overwrite
   with_items: "{{ node_roles }}"
