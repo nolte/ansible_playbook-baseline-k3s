@@ -6,11 +6,9 @@
     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
   tasks:
     - command: kubectl get nodes
-    - debug:
-        msg: "{{ hostvars[item].k3s_node_roles }}"
+    - include_role:
+        name: node_role
+      vars:
+        node_roles: "{{ hostvars[item].k3s_node_roles | default([]) }}"
       with_items:
         - "{{ groups['k3s'] }}"
-    - debug:
-        msg: "{{ hostvars[item].k3s_node_roles }}"
-      with_inventory_hostnames:
-        - k3s
