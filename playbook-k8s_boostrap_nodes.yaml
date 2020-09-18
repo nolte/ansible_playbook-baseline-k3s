@@ -7,7 +7,7 @@
   tasks:
     - command: kubectl get nodes
     - debug:
-        msg: "{{ item }}"
+        msg: "{{ hostvars[item].k3s_node_roles }}"
       with_items:
         - "{{ groups['k3s'] }}"
     - debug:
