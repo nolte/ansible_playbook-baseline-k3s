@@ -1,0 +1,8 @@
+---
+- hosts: k3sPrimary
+  become_method: sudo
+  become: true
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  tasks:
+    - command: kubectl get nodes
