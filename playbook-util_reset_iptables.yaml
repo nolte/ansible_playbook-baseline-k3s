@@ -27,3 +27,6 @@
           EOF
     - shell:
         cmd: iptables -nvL
+    - name: Reboot a slow machine that might have lots of updates to apply
+      reboot:
+        reboot_timeout: 3600
