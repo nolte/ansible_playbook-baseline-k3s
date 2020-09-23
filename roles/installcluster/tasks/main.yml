@@ -19,6 +19,15 @@
     state: disabled
   when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
 
+- name: install k3s nfs requeired stuff
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nfs-common
+    - cifs-utils
+
 - name: Enable IPv4 forwarding
   become: true
   sysctl:
