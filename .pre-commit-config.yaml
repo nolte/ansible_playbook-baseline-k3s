@@ -1,19 +1,19 @@
 ---
 repos:
-  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+  - repo: "https://github.com/pre-commit/pre-commit-hooks"
     rev: v2.4.0
     hooks:
       - id: trailing-whitespace
         exclude: |
-            (?x)(
-                .md|
-                .bumpversion.cfg
-            )
+          (?x)(
+              .md|
+              .bumpversion.cfg
+          )
       - id: end-of-file-fixer
         exclude: ".bumpversion.cfg"
       - id: check-yaml
       - id: flake8
-  - repo: 'https://github.com/adrienverge/yamllint'
+  - repo: "https://github.com/adrienverge/yamllint"
     rev: v1.20.0
     hooks:
       - id: yamllint
@@ -21,15 +21,9 @@ repos:
     rev: v4.3.21
     hooks:
       - id: isort
-  - repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-      - id: black
-        args: [--safe]
-        language_version: python3.6
   - repo: https://github.com/ansible/ansible-lint
     rev: v4.2.0
     hooks:
       - id: ansible-lint
-        args: [-x, "306"]  # faild for geerlingguy.docker (Shells that use pipes should set the pipefail option)
+        args: [-x, "306"] # faild for geerlingguy.docker (Shells that use pipes should set the pipefail option)
         exclude: ".circleci/config.yml"
