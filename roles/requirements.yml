@@ -1,2 +1,5 @@
 ---
-- name: xanmanning.k3s
+collections:
+  - name: ansible.posix
+roles:
+  - name: xanmanning.k3s
