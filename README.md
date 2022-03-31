@@ -34,15 +34,8 @@ cd local
 packer build k3s-node.json
 ```
 
+### Depends with vendir
 
-### Depends with gilt
-
-```yaml
----
-- git: https://github.com/nolte/ansible_playbook-baseline-online-server.git
-  version: feature/centos8
-  dst: bin/ansible_playbook-baseline-online-server/
-- git: https://github.com/nolte/ansible_playbook-baseline-k3s.git
-  version: master
-  dst: bin/ansible_playbook-k3s-preparation/
+```sh
+vendir sync
 ```
