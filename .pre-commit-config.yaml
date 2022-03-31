@@ -14,7 +14,7 @@ repos:
       - id: check-yaml
       - id: flake8
   - repo: "https://github.com/adrienverge/yamllint"
-    rev: v1.20.0
+    rev: v1.26.3
     hooks:
       - id: yamllint
         exclude: "vendir.lock.yml"
