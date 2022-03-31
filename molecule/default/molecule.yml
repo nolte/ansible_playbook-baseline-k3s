@@ -3,16 +3,15 @@ dependency:
   name: galaxy
   options:
     role-file: ./requirements.yml
+
 driver:
   name: vagrant
   provider:
     name: parallels
-lint:
-  name: yamllint
-  enabled: true
+
 platforms:
   - name: molecule-instance-1
-    box: bento/centos-8
+    box: bento/rockylinux-8.5
     memory: 8192
     cpus: 2
     groups:
@@ -23,16 +22,8 @@ provisioner:
     links:
       group_vars: ../inventory/group_vars/
   playbooks:
-    converge: ../../master-configure-system.yml
-  lint:
-    name: ansible-lint
-    # enabled: false
-    # options:
-    #   x:
-    #     - ANSIBLE0006
-    #     - ANSIBLE0010
-    #     - ANSIBLE0011
-    #     - ANSIBLE0016
+    converge: ../../master_playbook-full-install.yml
+
 scenario:
   name: default
   test_sequence:
@@ -48,6 +39,7 @@ scenario:
     - verify
     - cleanup
     - destroy
+
 verifier:
   name: testinfra
   directory: ../../test

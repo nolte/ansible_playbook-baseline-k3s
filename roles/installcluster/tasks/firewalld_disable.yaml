@@ -1,5 +1,6 @@
+---
 - debug: msg="todo!"
-#- name: stop service firewalld if running
-#  systemd:
-#    name: firewalld
-#    state: stopped
+- name: stop service firewalld if running
+  systemd:
+    name: firewalld
+    state: stopped

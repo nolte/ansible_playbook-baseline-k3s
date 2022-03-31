@@ -1,1 +1,2 @@
-_extends: plumbing
+---
+_extends: gh-plumbing:.github/commons-release-drafter.yml

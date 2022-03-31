@@ -1,0 +1,12 @@
+---
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+directories:
+  - path: vendor
+    contents:
+      - path: baseline-online-server
+        git:
+          url: https://github.com/nolte/ansible_playbook-baseline-online-server.git
+          ref: "v1.0.5"
+        includePaths:
+          - ansible/**
