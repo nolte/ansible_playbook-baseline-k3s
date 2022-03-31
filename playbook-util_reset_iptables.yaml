@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become_method: sudo
+  become: true
+  tasks:
+    - shell:
+        cmd: |
+          cat <<EOF
+          iptables -P INPUT ACCEPT
+          iptables -P FORWARD ACCEPT
+          iptables -P OUTPUT ACCEPT
+          iptables -t nat -F
+          iptables -t mangle -F
+          iptables -F
+          iptables -X
+          EOF
+    - shell:
+        cmd: |
+          cat <<EOF
+          ip6tables -P INPUT ACCEPT
+          ip6tables -P FORWARD ACCEPT
+          ip6tables -P OUTPUT ACCEPT
+          ip6tables -t nat -F
+          ip6tables -t mangle -F
+          ip6tables -F
+          ip6tables -X
+          EOF
+    - shell:
+        cmd: iptables -nvL
+    - name: Reboot a slow machine that might have lots of updates to apply
+      reboot:
+        reboot_timeout: 3600

@@ -1,5 +1,5 @@
 ---
-- hosts: k3s
+- hosts: all
   become: true
   tasks:
     - include_role:

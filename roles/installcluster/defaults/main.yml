@@ -1,0 +1,2 @@
+firewalld_enabled: true
+firewalld_exists: true

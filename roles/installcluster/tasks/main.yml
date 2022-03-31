@@ -2,32 +2,82 @@
 #- become: true
 #  dnf:
 #    name: python3
+# https://sick.codes/how-to-install-kubernetes-on-centos-8-easy-way/
+- name: install k3s requeired stuff
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - container-selinux
+    - selinux-policy-base
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
 
-- become: true
-  pip:
-    #executable: /usr/local/bin/pip3
-    name:
-      - openshift
-      - kubernetes
-      - kubernetes-validate
-      - jmespath
+- name: Set SELinux to disabled state
+  become: true
+  selinux:
+    state: disabled
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
 
-- name: Ensure SELinux is set to enforcing mode
+- name: Enable IPv4 forwarding
+  become: true
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: yes
+
+- name: Enable IPv6 forwarding
+  become: true
+  sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    state: present
+    reload: yes
+
+- name: Add br_netfilter to /etc/modules-load.d/
+  become: true
+  copy:
+    content: "br_netfilter"
+    dest: /etc/modules-load.d/br_netfilter.conf
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+
+- name: Load br_netfilter
+  become: true
+  modprobe:
+    name: br_netfilter
+    state: present
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+
+- name: Set bridge-nf-call-iptables (just to be sure)
+  become: true
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+    reload: yes
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+  loop:
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
+
+- name: Add /usr/local/bin to sudo secure_path
   become: true
   lineinfile:
-    path: /etc/environment
-    regexp: '^KUBECONFIG='
-    line: KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-
-- name: Ensure SELinux is set to enforcing mode
-  lineinfile:
-    path: "/home/{{ ansible_ssh_user }}/.bashrc"
-    regexp: '^KUBECONFIG='
-    line: KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-  become_user: "{{ ansible_ssh_user }}"
+    line: "Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin"
+    regexp: "Defaults(\\s)*secure_path(\\s)*="
+    state: present
+    insertafter: EOF
+    path: /etc/sudoers
+    validate: "visudo -cf %s"
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
 
 - include_role:
     name: xanmanning.k3s
 
 # https://rancher.com/docs/k3s/latest/en/installation/install-options/
-- include_tasks: configure_firewalld.yaml
+- include_tasks: firewalld_enabled.yaml
+  when: firewalld_enabled
+
+- include_tasks: firewalld_disable.yaml
+  when: not firewalld_enabled and firewalld_exists

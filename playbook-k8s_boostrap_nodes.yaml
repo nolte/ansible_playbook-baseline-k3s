@@ -1,0 +1,16 @@
+---
+- hosts: k3sPrimary
+  become_method: sudo
+  become: true
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  tasks:
+
+    - include_role:
+        name: node_role
+      vars:
+        node_roles: "{{ hostvars[node].k3s_node_roles | default([]) }}"
+      with_items:
+        - "{{ groups['k3s'] }}"
+      loop_control:
+        loop_var: node
